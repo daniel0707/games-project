@@ -18,11 +18,16 @@ public class MovePenguin : MonoBehaviour {
 			isOnFloor = true;
 		}
 	}
+
+	void OnCollisionExit2D(Collision2D coll){
+		if (coll.gameObject.tag == "Floor") {
+			isOnFloor = false;
+		}
+	}
+
 	private void movement(){
 		if (Input.GetKey (KeyCode.UpArrow) && isOnFloor) { //detect if the key down or up and is on floor
 			penguinBody.AddForce(Vector2.up * jumpSpeed * comboSpeed);
-			//transform.Translate(0,jumpSpeed * Time.deltaTime,0);
-			isOnFloor = false;
 		}
 
 		if (Input.GetKey (KeyCode.LeftArrow)) {

@@ -48,6 +48,7 @@
   <ItemGroup>
      <Compile Include="Assets\DBscript.cs" />
      <Compile Include="Assets\MovePenguin.cs" />
+     <Compile Include="Assets\Platform.cs" />
      <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
