@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MovePenguin : MonoBehaviour {
 
-	private float jumpSpeed = 2160000f;
+	private float jumpSpeed = 300f;
 	private float comboSpeed = 0.3f;
 	private float maxSpeed = 100f;
 	private float minSpeed = -100f;
@@ -26,8 +26,10 @@ public class MovePenguin : MonoBehaviour {
 	}
 
 	private void movement(){
+
 		if (Input.GetKey (KeyCode.UpArrow) && isOnFloor) { //detect if the key down or up and is on floor
-			penguinBody.AddForce(Vector2.up * jumpSpeed * comboSpeed);
+			//penguinBody.AddForce(Vector2.up * jumpSpeed * comboSpeed);
+			penguinBody.velocity = new Vector2 (penguinBody.velocity.x, jumpSpeed * comboSpeed);
 		}
 
 		if (Input.GetKey (KeyCode.LeftArrow)) {

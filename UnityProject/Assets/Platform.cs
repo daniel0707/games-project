@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class Platform : MonoBehaviour {
 	
-	private int floorID;
-	private float fallSpeed;
-	private int spawnPoint;
+	private int floorID = 1;
+	public float fallSpeed = 20f;
+	private Vector2 spawnPoint;
 	GameObject platform;
 
 	private int PlatformSize (int pID){
@@ -29,19 +29,35 @@ public class Platform : MonoBehaviour {
 		int size = PlatformSize (floorID);
 		int xTemp = 48 - size * 6;
 		int xCoordinate = Random.Range (-48, xTemp);
-		int[] myArray = new myArray[2]{xCoordinate,168};
+		int[] myArray = new int[2]{xCoordinate,168};
 
 		return myArray;
 	}
 
 	public void spawnFloor(){
-		
-		Instantiate (platform);
+		int platSize = PlatformSize (floorID);
+
+		int[] pos = Position ();
+
+		spawnPoint = new Vector2(pos[0],pos[1]);
+
+		string temp = "Block" + platSize;
+
+		platform = GameObject.Find (temp);
+			
+		Instantiate (platform,spawnPoint,Quaternion.identity);
+
+		floorID += 1;
+	}
+
+	public void firstSpawn (){
+
+
 	}
 
 		// Use this for initialization
 	void Start () {
-		
+		firstSpawn ();
 	}
 	
 	// Update is called once per frame
