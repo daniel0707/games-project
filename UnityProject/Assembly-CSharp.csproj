@@ -51,7 +51,7 @@
      <Compile Include="Assets\Platform.cs" />
      <Compile Include="Assets\blockProperty.cs" />
      <Compile Include="Assets\bottomDetection.cs" />
-     <Compile Include="Assets\controller.cs" />
+     <Compile Include="Assets\theController.cs" />
      <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
