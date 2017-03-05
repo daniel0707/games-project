@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class MovePenguin : MonoBehaviour {
 
+	public GUIText scoreText;
+	private float currentLevel = 0;
+	private float highestLevel = 0;
+	private float previousLevel = 0;
+	public float score = 0;
 	private float jumpSpeed = 400f;
 	private float comboSpeed = 0.3f;
 	private float maxSpeed = 100f;
@@ -19,10 +24,30 @@ public class MovePenguin : MonoBehaviour {
 	public Transform pointB;
 
 
+	public bool isGrounded(){
+		grounded = Physics2D.OverlapArea (pointA.position,pointB.position, whatIsGround);
+		return grounded;
+	}
 
 	void OnCollisionEnter2D(Collision2D other){
 		if (other.gameObject.tag == "Floor") {
 			transform.parent = other.transform;
+
+			//Add to score if player reached a higher level
+			if (isGrounded () && penguinBody.velocity.y <= 0) {
+				blockProperty bP = other.gameObject.GetComponent<blockProperty> () as blockProperty;
+				currentLevel = bP.level;
+				if (currentLevel > highestLevel) {
+					highestLevel = currentLevel;
+				}
+				if (currentLevel == highestLevel) {
+					score += currentLevel - previousLevel;
+				}
+				if (currentLevel > previousLevel) {
+					previousLevel = currentLevel;
+				}
+				scoreText.text = "Score: " + score;
+			}
 		}
 	}
 
@@ -31,13 +56,7 @@ public class MovePenguin : MonoBehaviour {
 			transform.parent = null;
 		}
 	}
-
-	public bool isGrounded(){
-		grounded = Physics2D.OverlapArea (pointA.position,pointB.position, whatIsGround);
-		return grounded;
-	}
-
-
+		
 	private bool isFalling(){
 		if (penguinBody.velocity.y <= 0 ) {
 			return true;
@@ -89,6 +108,8 @@ public class MovePenguin : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		penguinBody = this.gameObject.GetComponent<Rigidbody2D>();
+		scoreText = GameObject.Find ("ScoreView").GetComponent<GUIText> ();
+		scoreText.text = "Score: " + score;
 	}
 	
 	// Update is called once per frame

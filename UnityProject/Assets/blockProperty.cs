@@ -5,6 +5,7 @@ using UnityEngine;
 public class blockProperty : MonoBehaviour {
 	
 	PlatformEffector2D platEff;
+	public int level;
 
 	void OnBecameInvisible() {
 		platEff.enabled = false;

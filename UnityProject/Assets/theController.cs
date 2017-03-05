@@ -10,7 +10,6 @@ public class theController : MonoBehaviour {
 	private int floorID = 0;
 	public int FallSpeed = -1;
 	private Vector2 spawnPoint;
-	GameObject platform;
 
 	private int PlatformSize (int pID){
 		int Stage;
@@ -51,7 +50,9 @@ public class theController : MonoBehaviour {
 
 		string temp = "Prefabs/Block" + blockNR;
 
-		platform = Instantiate (Resources.Load (temp, typeof(GameObject)), spawnPoint, Quaternion.identity) as GameObject;
+		GameObject platform = Instantiate (Resources.Load (temp, typeof(GameObject)), spawnPoint, Quaternion.identity) as GameObject;
+		blockProperty blockProp = platform.GetComponent<blockProperty> () as blockProperty;
+		blockProp.level = floorID;
 
 		floorID += 1;
 	}
@@ -70,7 +71,10 @@ public class theController : MonoBehaviour {
 
 			string temp = "Prefabs/Block" + blockNR;
 
-			platform = Instantiate (Resources.Load (temp, typeof(GameObject)), spawnPoint, Quaternion.identity) as GameObject;
+			GameObject platform = Instantiate (Resources.Load (temp, typeof(GameObject)), spawnPoint, Quaternion.identity) as GameObject;
+
+			blockProperty blockProp = platform.GetComponent<blockProperty> () as blockProperty;
+			blockProp.level = floorID;
 
 			floorID += 1;
 		}
