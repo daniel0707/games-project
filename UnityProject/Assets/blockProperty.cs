@@ -5,6 +5,7 @@ using UnityEngine;
 public class blockProperty : MonoBehaviour {
 	
 	PlatformEffector2D platEff;
+
 	void OnBecameInvisible() {
 		platEff.enabled = false;
 	}
@@ -19,8 +20,8 @@ public class blockProperty : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
+
 	void FixedUpdate () {
-		
 		transform.Translate (0, -0.1f, 0);
 	}
 }

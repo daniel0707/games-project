@@ -19,7 +19,7 @@ public class theController : MonoBehaviour {
 		int Size;
 
 		if (pID % 100 == 0) {
-			Size = 17;
+			Size = 15;
 			return Size;
 		}
 
@@ -34,21 +34,20 @@ public class theController : MonoBehaviour {
 
 	private int[] Position(){
 		int size = PlatformSize (floorID);
-		int xTemp = 42 - (size * 6) +1;
+		int xTemp = 42 - ((size * 6) +1);
 		int xCoordinate = Random.Range (-48, xTemp);
-		int[] myArray = new int[2]{xCoordinate,112};
+		int[] myArray = new int[3]{xCoordinate,112,size};
 
+		//Debug.Log ("xTemp =" + xTemp + " and " + "xCoord = " + xCoordinate + " and " + "Size was " + size);
 		return myArray;
 	}
 
 	public void spawnFloor(){
-		int platSize = PlatformSize (floorID);
-
 		int[] pos = Position ();
 
 		spawnPoint = new Vector2(pos[0],pos[1]);
 
-		int blockNR = platSize - 1;
+		int blockNR = pos[2] -1;
 
 		string temp = "Prefabs/Block" + blockNR;
 
@@ -63,17 +62,13 @@ public class theController : MonoBehaviour {
 
 		for (int i = 0; i < 9; i++) {
 
-			int platSize = PlatformSize (floorID);
-
 			int[] pos = Position ();
 
 			spawnPoint = new Vector2 (pos[0], positionY[i]);
 
-			int blockNR = platSize - 1;
+			int blockNR = pos[2] - 1;
 
 			string temp = "Prefabs/Block" + blockNR;
-
-			//platform = GameObject.Find (temp);
 
 			platform = Instantiate (Resources.Load (temp, typeof(GameObject)), spawnPoint, Quaternion.identity) as GameObject;
 
