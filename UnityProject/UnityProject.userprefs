@@ -1,11 +1,11 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\MovePenguin.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\theController.cs">
     <Files>
-      <File FileName="Assets\MovePenguin.cs" Line="112" Column="38" />
-      <File FileName="Assets\blockProperty.cs" Line="15" Column="26" />
-      <File FileName="Assets\bottomDetection.cs" Line="10" Column="20" />
-      <File FileName="Assets\theController.cs" Line="64" Column="32" />
+      <File FileName="Assets\MovePenguin.cs" Line="1" Column="1" />
+      <File FileName="Assets\blockProperty.cs" Line="13" Column="28" />
+      <File FileName="Assets\bottomDetection.cs" Line="9" Column="2" />
+      <File FileName="Assets\theController.cs" Line="74" Column="34" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

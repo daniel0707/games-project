@@ -5,8 +5,9 @@ using UnityEngine;
 public class bottomDetection : MonoBehaviour {
 
 	private theController tc;
+
+
 	void OnCollisionEnter2D (Collision2D other) {
-		
 		tc.spawnFloor ();
 		Destroy(other.gameObject);
 	}

@@ -3,17 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MovePenguin : MonoBehaviour {
-
+	
 	public GUIText scoreText;
+
 	private float currentLevel = 0;
 	private float highestLevel = 0;
 	private float previousLevel = 0;
 	public float score = 0;
-	private float jumpSpeed = 400f;
-	private float comboSpeed = 0.3f;
+
+	private float jumpSpeed = 150f;
+	private float comboSpeed = 1.0f;
+	private int comboScore = 0;
 	private float maxSpeed = 100f;
 	private float minSpeed = -100f;
 	private float sideSpeed = 10f;
+
 	private Rigidbody2D penguinBody;
 
 	public GameObject[] objectlist;
@@ -34,14 +38,20 @@ public class MovePenguin : MonoBehaviour {
 			transform.parent = other.transform;
 
 			//Add to score if player reached a higher level
-			if (isGrounded () && penguinBody.velocity.y <= 0) {
+			if (isGrounded ()) {
 				blockProperty bP = other.gameObject.GetComponent<blockProperty> () as blockProperty;
 				currentLevel = bP.level;
+				if (currentLevel > highestLevel + 1) {
+					comboScore += 1;
+				} else {
+					comboScore = 0;
+				}
+
 				if (currentLevel > highestLevel) {
 					highestLevel = currentLevel;
 				}
 				if (currentLevel == highestLevel) {
-					score += currentLevel - previousLevel;
+					score += (10 + comboScore) * (currentLevel - previousLevel);
 				}
 				if (currentLevel > previousLevel) {
 					previousLevel = currentLevel;
@@ -90,7 +100,7 @@ public class MovePenguin : MonoBehaviour {
 	}
 
 	private void fixPos (){
-		if (penguinBody.transform.position.y > 78) {
+		if (penguinBody.transform.position.y + penguinBody.velocity.y * Time.deltaTime >= 78) {
 			
 			penguinBody.transform.position = new Vector2 (penguinBody.transform.position.x, 78);
 
@@ -102,9 +112,6 @@ public class MovePenguin : MonoBehaviour {
 		}
 	}
 
-
-
-
 	// Use this for initialization
 	void Start () {
 		penguinBody = this.gameObject.GetComponent<Rigidbody2D>();
@@ -112,10 +119,11 @@ public class MovePenguin : MonoBehaviour {
 		scoreText.text = "Score: " + score;
 	}
 	
-	// Update is called once per frame
+	// Update is called once per frame, fixed framerate
 	void FixedUpdate () {
 		movement ();
 	}
+	// Update is called once per frame, frame pushed when ready
 	void Update(){
 		fixPos ();
 	}

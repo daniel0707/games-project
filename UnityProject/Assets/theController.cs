@@ -35,7 +35,7 @@ public class theController : MonoBehaviour {
 		int size = PlatformSize (floorID);
 		int xTemp = 42 - ((size * 6) +1);
 		int xCoordinate = Random.Range (-48, xTemp);
-		int[] myArray = new int[3]{xCoordinate,112,size};
+		int[] myArray = new int[3]{xCoordinate,120,size};
 
 		//Debug.Log ("xTemp =" + xTemp + " and " + "xCoord = " + xCoordinate + " and " + "Size was " + size);
 		return myArray;
@@ -48,7 +48,9 @@ public class theController : MonoBehaviour {
 
 		int blockNR = pos[2] -1;
 
-		string temp = "Prefabs/Block" + blockNR;
+		int floorZone = floorID / 100;
+
+		string temp = "Prefabs/Floor" +floorZone +"A"+blockNR;
 
 		GameObject platform = Instantiate (Resources.Load (temp, typeof(GameObject)), spawnPoint, Quaternion.identity) as GameObject;
 		blockProperty blockProp = platform.GetComponent<blockProperty> () as blockProperty;
@@ -59,9 +61,9 @@ public class theController : MonoBehaviour {
 
 
 	private void FirstSpawn(){
-		int[] positionY = new int[]{ -90, -66, -42, -18, 6, 30, 54, 78, 102 };
+		int[] positionY = new int[]{ -90, -48, -6, 36, 78, 120};
 
-		for (int i = 0; i < 9; i++) {
+		for (int i = 0; i < 6; i++) {
 
 			int[] pos = Position ();
 
@@ -69,7 +71,9 @@ public class theController : MonoBehaviour {
 
 			int blockNR = pos[2] - 1;
 
-			string temp = "Prefabs/Block" + blockNR;
+			int floorZone = floorID / 100;
+
+			string temp = "Prefabs/Floor" +floorZone +"A"+blockNR;
 
 			GameObject platform = Instantiate (Resources.Load (temp, typeof(GameObject)), spawnPoint, Quaternion.identity) as GameObject;
 
