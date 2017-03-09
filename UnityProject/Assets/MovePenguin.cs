@@ -3,33 +3,46 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MovePenguin : MonoBehaviour {
-	
-	public GUIText scoreText;
+
+
+	private theController controlRef;
+	private bool firstJump = false;
+
+	public int Cooldown = 0;
+	public float LastSpeed;
+	public float CurrentSpeed;
+	public bool FacingRight = true;
+	public GUIText ScoreText;
 
 	private float currentLevel = 0;
 	private float highestLevel = 0;
 	private float previousLevel = 0;
-	public float score = 0;
+	public float Score = 0;
 
 	private float jumpSpeed = 150f;
 	private float comboSpeed = 1.0f;
 	private int comboScore = 0;
+	private float maxComboSpeed = 2.0f;
 	private float maxSpeed = 100f;
-	private float minSpeed = -100f;
+	private float minSpeed = -100f ;
 	private float sideSpeed = 10f;
 
 	private Rigidbody2D penguinBody;
 
-	public GameObject[] objectlist;
+	public List<GameObject> Objectlist= new List<GameObject>();
 
-	bool grounded = false;
-	public LayerMask whatIsGround;
-	public Transform pointA;
-	public Transform pointB;
+	private bool grounded = false;
+	public LayerMask WhatIsGround;
+	public Transform PointA;
+	public Transform PointB;
 
 
+	public void getLastVelocity(){
+		LastSpeed = CurrentSpeed;
+		CurrentSpeed = penguinBody.velocity.x;
+	}
 	public bool isGrounded(){
-		grounded = Physics2D.OverlapArea (pointA.position,pointB.position, whatIsGround);
+		grounded = Physics2D.OverlapArea (PointA.position,PointB.position, WhatIsGround);
 		return grounded;
 	}
 
@@ -46,18 +59,22 @@ public class MovePenguin : MonoBehaviour {
 				} else {
 					comboScore = 0;
 				}
-
 				if (currentLevel > highestLevel) {
 					highestLevel = currentLevel;
+				} else {
+					comboSpeed = 1.0f;
 				}
 				if (currentLevel == highestLevel) {
-					score += (10 + comboScore) * (currentLevel - previousLevel);
+					Score += (10 + comboScore) * (currentLevel - previousLevel);
 				}
 				if (currentLevel > previousLevel) {
 					previousLevel = currentLevel;
 				}
-				scoreText.text = "Score: " + score;
+				ScoreText.text = "Score: " + Score;
 			}
+		}
+		if (other.gameObject.tag == "WallLeft" || other.gameObject.tag == "WallRight") {
+			Flip ();
 		}
 	}
 
@@ -76,12 +93,19 @@ public class MovePenguin : MonoBehaviour {
 	}
 
 	private void movement(){
+		maxSpeed = 100f * comboSpeed;
+		minSpeed = -100f * comboSpeed;
+		sideSpeed = 10f * comboSpeed;
 
 		if ((Input.GetKey (KeyCode.UpArrow)) && (isGrounded()) && (isFalling())) { 
 			penguinBody.velocity = new Vector2 (penguinBody.velocity.x, jumpSpeed * comboSpeed);
+			if (firstJump == false) {
+				controlRef.fallingVel = -0.1f;
+				firstJump = true;
+			}
 		}
-
-		if (Input.GetKey (KeyCode.LeftArrow)) {
+			
+		if (Input.GetKey (KeyCode.LeftArrow)&&Cooldown == 0) {
 			if (penguinBody.velocity.x > minSpeed) {
 				penguinBody.velocity = new Vector2 (penguinBody.velocity.x - sideSpeed, penguinBody.velocity.y);
 			} else {
@@ -89,7 +113,9 @@ public class MovePenguin : MonoBehaviour {
 			}
 		}
 				
-		if (Input.GetKey (KeyCode.RightArrow)) {
+
+		if (Input.GetKey (KeyCode.RightArrow) && Cooldown == 0) {
+
 			if (penguinBody.velocity.x < maxSpeed) {
 				penguinBody.velocity = new Vector2 (penguinBody.velocity.x + sideSpeed, penguinBody.velocity.y);
 			} else {
@@ -98,33 +124,80 @@ public class MovePenguin : MonoBehaviour {
 		}
 					
 	}
+	public void turnCorrect (){
+		if (penguinBody.velocity.x > 0) {
+			FacingRight = true;
+			penguinBody.transform.localScale = new Vector3 (1, 1, 1);
+		}
+		if (penguinBody.velocity.x < 0) {
+			penguinBody.transform.localScale = new Vector3 (-1, 1, 1);
+			FacingRight = false;
+		}
+	}
+	public void Flip(){
+		
+		penguinBody.transform.localScale = new Vector3 ((-1 * penguinBody.transform.localScale.x), penguinBody.transform.localScale.y, penguinBody.transform.localScale.z);
+		penguinBody.velocity = new Vector2 ((-1 * LastSpeed), penguinBody.velocity.y);
+		if (FacingRight) {
+			FacingRight = false;
+		} else {
+			FacingRight = true;
+		}
+		comboSpeed += 0.1f;
+		if (comboSpeed >= maxComboSpeed) {
+			comboSpeed = maxComboSpeed;
+		}
+		Cooldown = 3;
+	}
 
 	private void fixPos (){
 		if (penguinBody.transform.position.y + penguinBody.velocity.y * Time.deltaTime >= 78) {
 			
-			penguinBody.transform.position = new Vector2 (penguinBody.transform.position.x, 78);
-
-			objectlist = GameObject.FindGameObjectsWithTag("Floor");
-
-			foreach (GameObject obj in objectlist) {
-				obj.transform.Translate (0,- penguinBody.velocity.y * Time.deltaTime, 0);
+			GameObject[] floorList = GameObject.FindGameObjectsWithTag("Floor");
+			GameObject[] wallLeftList = GameObject.FindGameObjectsWithTag ("WallLeft");
+			GameObject[] wallRightList = GameObject.FindGameObjectsWithTag ("WallRight");
+			foreach (GameObject obj in floorList) {
+				Objectlist.Add (obj);
 			}
+			foreach (GameObject obj in wallLeftList) {
+				Objectlist.Add (obj);
+			}
+			foreach (GameObject obj in wallRightList) {
+				Objectlist.Add (obj);
+			}
+			float deltaPos = -penguinBody.velocity.y * Time.deltaTime;
+			foreach (GameObject obj in Objectlist) {
+				obj.transform.Translate (0,deltaPos, 0);
+			}
+			Objectlist.Clear ();
+			penguinBody.transform.position = new Vector2 (penguinBody.transform.position.x, 78);
+		}
+	}
+
+	private void reduceCooldown(){
+
+		if(Cooldown>0){
+			Cooldown--;
 		}
 	}
 
 	// Use this for initialization
 	void Start () {
+		controlRef = GameObject.Find ("GameController").GetComponent<theController> ();
 		penguinBody = this.gameObject.GetComponent<Rigidbody2D>();
-		scoreText = GameObject.Find ("ScoreView").GetComponent<GUIText> ();
-		scoreText.text = "Score: " + score;
+		ScoreText = GameObject.Find ("ScoreView").GetComponent<GUIText> ();
+		ScoreText.text = "Score: " + Score;
 	}
 	
 	// Update is called once per frame, fixed framerate
 	void FixedUpdate () {
 		movement ();
+		reduceCooldown();
 	}
 	// Update is called once per frame, frame pushed when ready
 	void Update(){
+		turnCorrect ();
 		fixPos ();
+		getLastVelocity ();
 	}
 }

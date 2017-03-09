@@ -5,10 +5,9 @@ using UnityEngine;
 public class theController : MonoBehaviour {
 
 
-	//Vector2 startPosition = new Vector2 (0,-10);
+	public int FloorID = 0;
+	public float fallingVel;
 
-	private int floorID = 0;
-	public int FallSpeed = -1;
 	private Vector2 spawnPoint;
 
 	private int PlatformSize (int pID){
@@ -31,62 +30,108 @@ public class theController : MonoBehaviour {
 		return Size;
 	}
 
-	private int[] Position(){
-		int size = PlatformSize (floorID);
+	private float[] Position(){
+		
+		GameObject[] floorList;
+		floorList = GameObject.FindGameObjectsWithTag("Floor");
+		float highestFloorPosition = 0.0f;
+		foreach (GameObject obj in floorList) {
+			if (obj.transform.position.y > highestFloorPosition) {
+				highestFloorPosition = obj.transform.position.y;
+			}
+		}
+		highestFloorPosition += 42;
+		int size = PlatformSize (FloorID);
 		int xTemp = 42 - ((size * 6) +1);
 		int xCoordinate = Random.Range (-48, xTemp);
-		int[] myArray = new int[3]{xCoordinate,120,size};
+		float[] myArray = new float[3]{xCoordinate,highestFloorPosition,size};
 
-		//Debug.Log ("xTemp =" + xTemp + " and " + "xCoord = " + xCoordinate + " and " + "Size was " + size);
 		return myArray;
 	}
 
 	public void spawnFloor(){
-		int[] pos = Position ();
+		float[] pos = Position ();
 
 		spawnPoint = new Vector2(pos[0],pos[1]);
 
-		int blockNR = pos[2] -1;
+		float blockNR = pos[2] -1;
 
-		int floorZone = floorID / 100;
+		int floorZone = FloorID / 100;
+
+
 
 		string temp = "Prefabs/Floor" +floorZone +"A"+blockNR;
 
 		GameObject platform = Instantiate (Resources.Load (temp, typeof(GameObject)), spawnPoint, Quaternion.identity) as GameObject;
 		blockProperty blockProp = platform.GetComponent<blockProperty> () as blockProperty;
-		blockProp.level = floorID;
+		blockProp.level = FloorID;
 
-		floorID += 1;
+		FloorID += 1;
 	}
 
+	public void spawnWallLeft(){
+		float highestWallLeftPosition = 0.0f;
+		GameObject[] wallLeftList;
+		wallLeftList = GameObject.FindGameObjectsWithTag("WallLeft");
+		foreach (GameObject obj in wallLeftList) {
+			if (obj.transform.position.y > highestWallLeftPosition) {
+				highestWallLeftPosition = obj.transform.position.y;
+			}
+		}
+		highestWallLeftPosition += 42;
+		Vector2 SPA = new Vector2 (-54, highestWallLeftPosition);
+		int zoneA = (FloorID - 1) / 100;
+		string tempA = "Prefabs/WallLeft" + zoneA + "A";
+		GameObject wallLeft = Instantiate (Resources.Load (tempA, typeof(GameObject)), SPA, Quaternion.identity)as GameObject;
+	}
+
+	public void spawnWallRight(){
+		float highestWallRightPosition = 0.0f;
+		GameObject[] wallRightList;
+		wallRightList = GameObject.FindGameObjectsWithTag("WallRight");
+		foreach (GameObject obj in wallRightList) {
+			if (obj.transform.position.y > highestWallRightPosition) {
+				highestWallRightPosition = obj.transform.position.y;
+			}
+		}
+		highestWallRightPosition += 42;
+		Vector2 SPB = new Vector2 (48, highestWallRightPosition);
+		int zoneB = (FloorID - 1) / 100;
+		string tempB = "Prefabs/WallRight" + zoneB + "A";
+		GameObject wallRight = Instantiate (Resources.Load (tempB, typeof(GameObject)), SPB, Quaternion.identity)as GameObject;
+	}
 
 	private void FirstSpawn(){
-		int[] positionY = new int[]{ -90, -48, -6, 36, 78, 120};
-
+		int[] floorPositionY = new int[]{ -90, -48, -6, 36, 78, 120};
+		int[] wallPositionY = new int[]{ -86, -44, -2, 40, 82, 124 };
 		for (int i = 0; i < 6; i++) {
-
-			int[] pos = Position ();
-
-			spawnPoint = new Vector2 (pos[0], positionY[i]);
-
-			int blockNR = pos[2] - 1;
-
-			int floorZone = floorID / 100;
-
+			//spawn floors
+			float[] pos = Position ();
+			spawnPoint = new Vector2 (pos[0], floorPositionY[i]);
+			float blockNR = pos[2] - 1;
+			int floorZone = FloorID / 100;
 			string temp = "Prefabs/Floor" +floorZone +"A"+blockNR;
-
 			GameObject platform = Instantiate (Resources.Load (temp, typeof(GameObject)), spawnPoint, Quaternion.identity) as GameObject;
-
 			blockProperty blockProp = platform.GetComponent<blockProperty> () as blockProperty;
-			blockProp.level = floorID;
-
-			floorID += 1;
+			blockProp.level = FloorID;
+			//spawn Left Walls
+			spawnPoint = new Vector2 (-54, wallPositionY [i]);
+			temp = "Prefabs/WallLeft" + floorZone + "A";
+			GameObject wallLeft = Instantiate (Resources.Load (temp, typeof(GameObject)), spawnPoint, Quaternion.identity)as GameObject;
+			//spawn Right Walls
+			spawnPoint = new Vector2 (48, wallPositionY [i]);
+			temp = "Prefabs/WallRight" + floorZone + "A";
+			GameObject wallRight = Instantiate (Resources.Load (temp, typeof(GameObject)), spawnPoint, Quaternion.identity)as GameObject;
+			//increment floorID
+			FloorID += 1;
 		}
+
+
 	}
 
 	// Use this for initialization
 	void Start () {
-		//GameObject platform1 = Instantiate (Resources.Load ("Prefabs/Block0", typeof(GameObject)),startPosition,Quaternion.identity) as GameObject;
+		fallingVel = 0.0f;
 		FirstSpawn();
 
 	}

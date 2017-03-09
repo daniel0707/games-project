@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class blockProperty : MonoBehaviour {
-	
-	PlatformEffector2D platEff;
-	Renderer platRend;
+
+	private theController cont;
+	private PlatformEffector2D platEff;
+	private Renderer platRend;
+	private float fallVel;
 	public int level;
 
 	void turnOffEffector() {
@@ -19,6 +21,7 @@ public class blockProperty : MonoBehaviour {
 	}
 	// Use this for initialization
 	void Start () {
+		cont = GameObject.Find ("GameController").GetComponent<theController> ();
 		platEff = this.GetComponent <PlatformEffector2D> ();
 		platRend = this.GetComponent<Renderer> ();
 	}
@@ -27,6 +30,7 @@ public class blockProperty : MonoBehaviour {
 
 	void FixedUpdate () {
 		turnOffEffector ();
-		transform.Translate (0, -0.1f, 0);
+		fallVel = cont.fallingVel;
+		transform.Translate (0,fallVel, 0);
 	}
 }

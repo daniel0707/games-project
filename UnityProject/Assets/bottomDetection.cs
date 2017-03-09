@@ -8,8 +8,18 @@ public class bottomDetection : MonoBehaviour {
 
 
 	void OnCollisionEnter2D (Collision2D other) {
-		tc.spawnFloor ();
-		Destroy(other.gameObject);
+		if (other.gameObject.CompareTag ("Floor")) {
+			tc.spawnFloor ();
+			Destroy (other.gameObject);
+		}
+		if(other.gameObject.CompareTag("WallLeft")){
+			tc.spawnWallLeft();
+			Destroy (other.gameObject);
+		}
+		if (other.gameObject.CompareTag ("WallRight")) {
+			tc.spawnWallRight ();
+			Destroy (other.gameObject);
+		}
 	}
 	// Use this for initialization
 	void Start () {

@@ -63,4 +63,3 @@ G:\OneDrive - Metropolia Ammattikorkeakoulu Oy\git\games-project\UnityProject\ob
 G:\OneDrive - Metropolia Ammattikorkeakoulu Oy\git\games-project\UnityProject\obj\Debug\Assembly-CSharp.dll
 G:\OneDrive - Metropolia Ammattikorkeakoulu Oy\git\games-project\UnityProject\obj\Debug\Assembly-CSharp.pdb
 C:\Users\danie\OneDrive - Metropolia Ammattikorkeakoulu Oy\git\games-project\UnityProject\Temp\bin\Debug\Assembly-CSharp-firstpass.pdb
-G:\OneDrive - Metropolia Ammattikorkeakoulu Oy\git\games-project\UnityProject\Temp\bin\Debug\Assembly-CSharp-firstpass.pdb
