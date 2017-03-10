@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MovePenguin : MonoBehaviour {
 
-
+	private Animator anim;
 	private theController controlRef;
 	private bool firstJump = false;
 
@@ -35,7 +35,6 @@ public class MovePenguin : MonoBehaviour {
 	public LayerMask WhatIsGround;
 	public Transform PointA;
 	public Transform PointB;
-
 
 	public void getLastVelocity(){
 		LastSpeed = CurrentSpeed;
@@ -175,14 +174,25 @@ public class MovePenguin : MonoBehaviour {
 	}
 
 	private void reduceCooldown(){
-
 		if(Cooldown>0){
 			Cooldown--;
 		}
 	}
 
+	private void animatorState(){
+		anim.SetBool ("isGrounded", isGrounded ());
+		anim.SetFloat ("WalkSpeed", Mathf.Abs(penguinBody.velocity.x/10));
+		anim.SetFloat ("JumpSpeed", Mathf.Abs (penguinBody.velocity.y / 10));
+		if (anim.GetCurrentAnimatorStateInfo(0).IsName("Walking")) {
+			anim.speed = anim.GetFloat ("WalkSpeed");
+		}
+		if (anim.GetCurrentAnimatorStateInfo (0).IsName ("Jumping")) {
+			anim.speed = anim.GetFloat ("JumpSpeed");
+		}
+	}
 	// Use this for initialization
 	void Start () {
+		anim = GetComponent<Animator> ();
 		controlRef = GameObject.Find ("GameController").GetComponent<theController> ();
 		penguinBody = this.gameObject.GetComponent<Rigidbody2D>();
 		ScoreText = GameObject.Find ("ScoreView").GetComponent<GUIText> ();
@@ -193,6 +203,7 @@ public class MovePenguin : MonoBehaviour {
 	void FixedUpdate () {
 		movement ();
 		reduceCooldown();
+		animatorState ();
 	}
 	// Update is called once per frame, frame pushed when ready
 	void Update(){
