@@ -58,8 +58,6 @@ public class theController : MonoBehaviour {
 
 		int floorZone = FloorID / 100;
 
-
-
 		string temp = "Prefabs/Floor" +floorZone +"A"+blockNR;
 
 		GameObject platform = Instantiate (Resources.Load (temp, typeof(GameObject)), spawnPoint, Quaternion.identity) as GameObject;
