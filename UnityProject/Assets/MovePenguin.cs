@@ -96,7 +96,7 @@ public class MovePenguin : MonoBehaviour {
 	}
 		
 	private bool isFalling(){
-		if (penguinBody.velocity.y <= 0 ) {
+		if (penguinBody.velocity.y <= 0.1f) {
 			return true;
 		} else {
 			return false;
@@ -167,11 +167,12 @@ public class MovePenguin : MonoBehaviour {
 	}
 
 	private void fixPos (){
-		if (penguinBody.transform.position.y + penguinBody.velocity.y * Time.deltaTime >= 74) {
+		if (penguinBody.transform.position.y + penguinBody.velocity.y * Time.deltaTime >= 66) {
 			
 			GameObject[] floorList = GameObject.FindGameObjectsWithTag("Floor");
 			GameObject[] wallLeftList = GameObject.FindGameObjectsWithTag ("WallLeft");
 			GameObject[] wallRightList = GameObject.FindGameObjectsWithTag ("WallRight");
+			GameObject[] icicleList = GameObject.FindGameObjectsWithTag ("Icicle");
 			foreach (GameObject obj in floorList) {
 				Objectlist.Add (obj);
 			}
@@ -181,12 +182,15 @@ public class MovePenguin : MonoBehaviour {
 			foreach (GameObject obj in wallRightList) {
 				Objectlist.Add (obj);
 			}
+			foreach (GameObject obj in icicleList) {
+				Objectlist.Add (obj);
+			}
 			float deltaPos = -penguinBody.velocity.y * Time.deltaTime;
 			foreach (GameObject obj in Objectlist) {
 				obj.transform.Translate (0,deltaPos, 0);
 			}
 			Objectlist.Clear ();
-			penguinBody.transform.position = new Vector2 (penguinBody.transform.position.x, 74);
+			penguinBody.transform.position = new Vector2 (penguinBody.transform.position.x, 66);
 		}
 		if (penguinBody.transform.position.y < -96) {
 			isAlive = false;

@@ -132,6 +132,7 @@ public class theController : MonoBehaviour {
 		}
 	}
 
+
 	// Use this for initialization
 	void Start () {
 		FloorID = 0;
@@ -141,6 +142,5 @@ public class theController : MonoBehaviour {
 
 	// Update is called once per frame
 	void FixedUpdate () {
-
 	}
 }

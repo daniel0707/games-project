@@ -23,6 +23,9 @@ public class bottomDetection : MonoBehaviour {
 			tc.spawnWallRight ();
 			Destroy (other.gameObject);
 		}
+		if(other.gameObject.CompareTag("Icicle")){
+			Destroy (other.gameObject);
+		}
 	}
 	// Use this for initialization
 	void Start () {
