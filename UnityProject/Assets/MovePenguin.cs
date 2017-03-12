@@ -23,7 +23,7 @@ public class MovePenguin : MonoBehaviour {
 	private float previousLevel = 0;
 	public float Score = 0;
 
-	private float jumpSpeed = 150f;
+	private float jumpSpeed = 200f;
 	private float comboSpeed = 1.0f;
 	private int comboScore = 0;
 	private float maxComboSpeed = 2.0f;

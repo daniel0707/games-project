@@ -1,13 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class theController : MonoBehaviour {
 
 
 	public int FloorID;
 	public float fallingVel;
-	private float[] floorZoneFallingSpeed = new float[] {-0.1f,-0.15f,-0.2f,-0.25f,-0.3f,-0.35f,-0.40f, -0.45f,-0.5f,-0.55f,-0.6f};
+	private float[] floorZoneFallingSpeed = new float[] {-0.2f,-0.3f,-0.4f,-0.5f,-0.6f,-0.7f,-0.8f, -0.9f,-1.0f,-1.1f,-1.2f};
 	private Vector2 spawnPoint;
 
 	private int PlatformSize (int pID){
@@ -125,16 +126,12 @@ public class theController : MonoBehaviour {
 			//increment floorID
 			FloorID += 1;
 		}
-
-
 	}
-
 	// Use this for initialization
 	void Start () {
 		FloorID = 0;
 		fallingVel = 0.0f;
 		FirstSpawn();
-
 	}
 
 	// Update is called once per frame

@@ -5,10 +5,13 @@ using UnityEngine;
 public class bottomDetection : MonoBehaviour {
 
 	private theController tc;
-
+	private GameObject penguin;
 
 	void OnCollisionEnter2D (Collision2D other) {
 		if (other.gameObject.CompareTag ("Floor")) {
+			if (other.transform.childCount > 0) {
+				penguin.transform.parent = null;
+			}
 			tc.spawnFloor ();
 			Destroy (other.gameObject);
 		}
@@ -24,7 +27,7 @@ public class bottomDetection : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		tc = GameObject.Find ("GameController").GetComponent<theController> ();
-
+		penguin = GameObject.Find ("Penguin");
 	}
 	
 	// Update is called once per frame
