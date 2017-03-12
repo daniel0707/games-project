@@ -4,12 +4,15 @@ using UnityEngine;
 using Mono.Data.Sqlite;
 using System.Data;
 using System;
+using UnityEngine.UI;
 
 public class DBscript : MonoBehaviour {
+
+	public bool scoreEntered = false;
 	
 	private string conn;
 
-	private List<Highscore>highScores = new List<Highscore>();
+	public List<Highscore>highScores = new List<Highscore>();
 
 	public GameObject scorePrefab;
 
@@ -18,6 +21,12 @@ public class DBscript : MonoBehaviour {
 	public int topRanks;
 
 	public int saveScores;
+
+	public InputField playerName;
+
+	private MovePenguin mp;
+
+	public GameObject nameDialog;
 
 	private void GetScores(){
 		highScores.Clear ();
@@ -43,12 +52,16 @@ public class DBscript : MonoBehaviour {
 		highScores.Sort ();
 	}
 
-	private void ShowScores(){
+	public void ShowScores(){
 		
 		GetScores ();
 
+		foreach (GameObject score in GameObject.FindGameObjectsWithTag("Score")) {
+			Destroy (score);
+		}
+
 		for (int i = 0; i < topRanks; i++) {
-			if (i <= highScores.Count -1) {
+			if (i < highScores.Count) {
 				GameObject tmpObj = Instantiate (scorePrefab);
 				Highscore tmpScore = highScores [i];
 				tmpObj.GetComponent<HighscoreScript> ().SetScore (tmpScore.Name, tmpScore.EndScore.ToString (), "#" + (i + 1) );
@@ -75,7 +88,7 @@ public class DBscript : MonoBehaviour {
 			dbconn = (IDbConnection) new SqliteConnection(conn);
 			dbconn.Open(); //Open connection to the database.
 			IDbCommand dbcmd = dbconn.CreateCommand();
-			string sqlQuery = string.Format("INSERT INTO HighScore(Name,Score)VALUES(\"{0}\",\"{1})\"",name,newScore);
+			string sqlQuery = string.Format("INSERT INTO HighScore(Name,Score)VALUES(\'{0}\',\'{1}\')",name,newScore);
 			dbcmd.CommandText = sqlQuery;
 			dbcmd.ExecuteScalar ();
 			dbcmd.Dispose();
@@ -90,7 +103,7 @@ public class DBscript : MonoBehaviour {
 		dbconn = (IDbConnection) new SqliteConnection(conn);
 		dbconn.Open(); //Open connection to the database.
 		IDbCommand dbcmd = dbconn.CreateCommand();
-		string sqlQuery = string.Format("DELETE FROM HighScore WHERE ID = \"{0}\"",rank);
+		string sqlQuery = string.Format("DELETE FROM HighScore WHERE ID = \'{0}\'",rank);
 		dbcmd.CommandText = sqlQuery;
 		dbcmd.ExecuteScalar ();
 		dbcmd.Dispose();
@@ -103,7 +116,7 @@ public class DBscript : MonoBehaviour {
 
 		GetScores ();
 
-		if (saveScores <= highScores.Count) {
+		if (saveScores < highScores.Count) {
 			int deleteCount = highScores.Count - saveScores;
 			highScores.Reverse ();
 
@@ -113,7 +126,7 @@ public class DBscript : MonoBehaviour {
 			IDbCommand dbcmd = dbconn.CreateCommand();
 
 			for (int i = 0; i < deleteCount; i++) {
-				string sqlQuery = string.Format("DELETE FROM HighScore WHERE ID = \"{0}\"",highScores[i].ID);
+				string sqlQuery = string.Format("DELETE FROM HighScore WHERE ID = \'{0}\'",highScores[i].ID);
 				dbcmd.CommandText = sqlQuery;
 				dbcmd.ExecuteScalar ();
 			}
@@ -124,10 +137,40 @@ public class DBscript : MonoBehaviour {
 		}
 	}
 
+	public void EnterName(){
+		if (playerName.text != string.Empty) {
+			
+			int score = (int)mp.Score;
+			InsertScore (playerName.text, score);
+			playerName.text = string.Empty;
+
+			ShowScores ();
+			scoreEntered = true;
+			nameDialog.SetActive (false);
+
+		}
+	}
+
+	public bool newHighScore(){
+		if (highScores.Count < saveScores) {
+			return true;
+		} else {
+			for (int i = 0; i < highScores.Count; i++) {
+				if (mp.Score > highScores [i].EndScore) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+		
+	private void createDefaultDB(){
+	}
 	// Use this for initialization
 	void Start () {
-		conn = "URI=file:" + Application.dataPath + "/DB/Database.db"; //Path to database.
-
+		
+		conn = "URI=file:" + System.IO.Path.Combine(Application.streamingAssetsPath, "Database.db"); //Path to database.
+		mp = GameObject.Find("Penguin").GetComponent<MovePenguin>();
 		//DeleteExtraScore ();
 
 		ShowScores ();
@@ -164,6 +207,7 @@ public class DBscript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+		//something for showing the end game screen
+		//on new score do: nameDialog.SetActive(true);
 	}
 }

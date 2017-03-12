@@ -5,9 +5,9 @@ using UnityEngine;
 public class theController : MonoBehaviour {
 
 
-	public int FloorID = 0;
+	public int FloorID;
 	public float fallingVel;
-
+	private float[] floorZoneFallingSpeed = new float[] {-0.1f,-0.15f,-0.2f,-0.25f,-0.3f,-0.35f,-0.40f, -0.45f,-0.5f,-0.55f,-0.6f};
 	private Vector2 spawnPoint;
 
 	private int PlatformSize (int pID){
@@ -58,6 +58,8 @@ public class theController : MonoBehaviour {
 
 		int floorZone = FloorID / 100;
 
+		fallingVel = floorZoneFallingSpeed[floorZone];
+
 		string temp = "Prefabs/Floor" +floorZone +"A"+blockNR;
 
 		GameObject platform = Instantiate (Resources.Load (temp, typeof(GameObject)), spawnPoint, Quaternion.identity) as GameObject;
@@ -78,7 +80,7 @@ public class theController : MonoBehaviour {
 		}
 		highestWallLeftPosition += 42;
 		Vector2 SPA = new Vector2 (-54, highestWallLeftPosition);
-		int zoneA = (FloorID - 1) / 100;
+		int zoneA = (FloorID ) / 100;
 		string tempA = "Prefabs/WallLeft" + zoneA + "A";
 		GameObject wallLeft = Instantiate (Resources.Load (tempA, typeof(GameObject)), SPA, Quaternion.identity)as GameObject;
 	}
@@ -94,7 +96,7 @@ public class theController : MonoBehaviour {
 		}
 		highestWallRightPosition += 42;
 		Vector2 SPB = new Vector2 (48, highestWallRightPosition);
-		int zoneB = (FloorID - 1) / 100;
+		int zoneB = (FloorID ) / 100;
 		string tempB = "Prefabs/WallRight" + zoneB + "A";
 		GameObject wallRight = Instantiate (Resources.Load (tempB, typeof(GameObject)), SPB, Quaternion.identity)as GameObject;
 	}
@@ -129,6 +131,7 @@ public class theController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		FloorID = 0;
 		fallingVel = 0.0f;
 		FirstSpawn();
 

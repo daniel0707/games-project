@@ -10,15 +10,16 @@ public class blockProperty : MonoBehaviour {
 	private float fallVel;
 	public int level;
 
-	void turnOffEffector() {
+	private void turnOffEffector() {
 		if (!platRend.isVisible && platEff.enabled) {
 			platEff.enabled = false;
 		}
 	}
 
-	void OnBecameVisible(){
+	private void OnBecameVisible(){
 		platEff.enabled = true;
 	}
+		
 	// Use this for initialization
 	void Start () {
 		cont = GameObject.Find ("GameController").GetComponent<theController> ();

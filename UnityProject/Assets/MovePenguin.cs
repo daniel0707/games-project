@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class MovePenguin : MonoBehaviour {
 
+	private canvasController CC;
+	private DBscript DBref;
+	private bool bouncedWall;
+	public bool isAlive = true;
 	private Animator anim;
 	private theController controlRef;
 	private bool firstJump = false;
@@ -53,12 +57,18 @@ public class MovePenguin : MonoBehaviour {
 			if (isGrounded ()) {
 				blockProperty bP = other.gameObject.GetComponent<blockProperty> () as blockProperty;
 				currentLevel = bP.level;
+				if (currentLevel == 1000) {
+					isAlive = false;
+				}
 				if (currentLevel > highestLevel + 1) {
 					comboScore += 1;
 				} else {
 					comboScore = 0;
 				}
 				if (currentLevel > highestLevel) {
+					if (!bouncedWall && comboSpeed>1.0f) {
+						comboSpeed -= 0.1f;
+					}
 					highestLevel = currentLevel;
 				} else {
 					comboSpeed = 1.0f;
@@ -73,6 +83,8 @@ public class MovePenguin : MonoBehaviour {
 			}
 		}
 		if (other.gameObject.tag == "WallLeft" || other.gameObject.tag == "WallRight") {
+			bouncedWall = true;
+			other.gameObject.GetComponent<AudioSource>().Play();
 			Flip ();
 		}
 	}
@@ -96,8 +108,13 @@ public class MovePenguin : MonoBehaviour {
 		minSpeed = -100f * comboSpeed;
 		sideSpeed = 10f * comboSpeed;
 
-		if ((Input.GetKey (KeyCode.UpArrow)) && (isGrounded()) && (isFalling())) { 
-			penguinBody.velocity = new Vector2 (penguinBody.velocity.x, jumpSpeed * comboSpeed);
+		if ((Input.GetKey (KeyCode.UpArrow)) && (isGrounded()) && (isFalling())) {
+			GetComponent<AudioSource>().Play();
+			if (penguinBody.velocity.x <= 100f) {
+				penguinBody.velocity = new Vector2 (penguinBody.velocity.x, jumpSpeed);
+			} else {
+				penguinBody.velocity = new Vector2 (penguinBody.velocity.x, jumpSpeed * comboSpeed);
+			}
 			if (firstJump == false) {
 				controlRef.fallingVel = -0.1f;
 				firstJump = true;
@@ -171,6 +188,9 @@ public class MovePenguin : MonoBehaviour {
 			Objectlist.Clear ();
 			penguinBody.transform.position = new Vector2 (penguinBody.transform.position.x, 78);
 		}
+		if (penguinBody.transform.position.y < -96) {
+			isAlive = false;
+		}
 	}
 
 	private void reduceCooldown(){
@@ -190,8 +210,22 @@ public class MovePenguin : MonoBehaviour {
 			anim.speed = anim.GetFloat ("JumpSpeed");
 		}
 	}
+
+	private void gameOver(){
+		if (isAlive == false) {
+			penguinBody.constraints = RigidbodyConstraints2D.FreezeAll;
+			controlRef.fallingVel = 0;
+			CC.MakeActive ();
+			DBref.ShowScores ();
+			if (DBref.newHighScore()&& !DBref.scoreEntered) {
+				DBref.nameDialog.SetActive(true);
+			}
+		}
+	}
 	// Use this for initialization
 	void Start () {
+		CC = GameObject.Find ("CanvasObject").GetComponent<canvasController>();
+		DBref = GameObject.Find ("HighScore").GetComponent<DBscript> ();
 		anim = GetComponent<Animator> ();
 		controlRef = GameObject.Find ("GameController").GetComponent<theController> ();
 		penguinBody = this.gameObject.GetComponent<Rigidbody2D>();
@@ -209,6 +243,7 @@ public class MovePenguin : MonoBehaviour {
 	void Update(){
 		turnCorrect ();
 		fixPos ();
+		gameOver ();
 		getLastVelocity ();
 	}
 }
