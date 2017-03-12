@@ -8,9 +8,7 @@ public class canvasController : MonoBehaviour {
 	public void MakeActive(){
 		canvasObject.SetActive (true);
 	}
-
 	void Start () {
-		
 	}
 	
 	// Update is called once per frame

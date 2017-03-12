@@ -35,3 +35,4 @@ public class blockProperty : MonoBehaviour {
 		transform.Translate (0,fallVel, 0);
 	}
 }
+

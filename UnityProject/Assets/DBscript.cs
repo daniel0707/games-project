@@ -28,6 +28,7 @@ public class DBscript : MonoBehaviour {
 
 	public GameObject nameDialog;
 
+
 	private void GetScores(){
 		highScores.Clear ();
 

@@ -57,7 +57,7 @@ public class MovePenguin : MonoBehaviour {
 			if (isGrounded ()) {
 				blockProperty bP = other.gameObject.GetComponent<blockProperty> () as blockProperty;
 				currentLevel = bP.level;
-				if (currentLevel == 1000) {
+				if (currentLevel == 500) {
 					isAlive = false;
 				}
 				if (currentLevel > highestLevel + 1) {
@@ -167,7 +167,7 @@ public class MovePenguin : MonoBehaviour {
 	}
 
 	private void fixPos (){
-		if (penguinBody.transform.position.y + penguinBody.velocity.y * Time.deltaTime >= 78) {
+		if (penguinBody.transform.position.y + penguinBody.velocity.y * Time.deltaTime >= 74) {
 			
 			GameObject[] floorList = GameObject.FindGameObjectsWithTag("Floor");
 			GameObject[] wallLeftList = GameObject.FindGameObjectsWithTag ("WallLeft");
@@ -186,12 +186,13 @@ public class MovePenguin : MonoBehaviour {
 				obj.transform.Translate (0,deltaPos, 0);
 			}
 			Objectlist.Clear ();
-			penguinBody.transform.position = new Vector2 (penguinBody.transform.position.x, 78);
+			penguinBody.transform.position = new Vector2 (penguinBody.transform.position.x, 74);
 		}
 		if (penguinBody.transform.position.y < -96) {
 			isAlive = false;
 		}
 	}
+
 
 	private void reduceCooldown(){
 		if(Cooldown>0){

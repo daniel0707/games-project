@@ -8,6 +8,7 @@ public class HighscoreScript : MonoBehaviour{
 	public GameObject Name;
 	public GameObject ID;
 
+
 	public void SetScore(string name, string score, string ID){
 		this.ID.GetComponent<Text> ().text = ID;
 		this.Name.GetComponent<Text> ().text = name;
