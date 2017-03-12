@@ -17,12 +17,12 @@ public class theController : MonoBehaviour {
 		int SizeMAX;
 		int Size;
 
-		if (pID % 100 == 0) {
+		if (pID % 50 == 0) {
 			Size = 15;
 			return Size;
 		}
 
-		Stage = pID / 100;
+		Stage = pID / 50;
 
 		SizeMIN = 5 - Stage / 2;
 		SizeMAX = 10 - Stage;
