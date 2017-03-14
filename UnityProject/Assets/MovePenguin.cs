@@ -4,31 +4,37 @@ using UnityEngine;
 
 public class MovePenguin : MonoBehaviour {
 
+	private SpriteRenderer penguinRenderer;
 	private canvasController CC;
 	private DBscript DBref;
 	private bool bouncedWall;
 	public bool isAlive = true;
 	private Animator anim;
 	private theController controlRef;
-	private bool firstJump = false;
+	public bool firstJump = false;
 
+	public bool gotHit;
+	public int fadeCount = 0;
+	public float alphaState = 1f;
+	public float order = 0;
+	public int Health = 3;
 	public int Cooldown = 0;
 	public float LastSpeed;
 	public float CurrentSpeed;
 	public bool FacingRight = true;
 	public GUIText ScoreText;
 
-	private float currentLevel = 0;
-	private float highestLevel = 0;
-	private float previousLevel = 0;
-	public float Score = 0;
+	private float currentLevel = 0f;
+	private float highestLevel = 0f;
+	private float previousLevel = 0f;
+	public float Score = 0f;
 
 	private float jumpSpeed = 200f;
 	private float comboSpeed = 1.0f;
 	private int comboScore = 0;
 	private float maxComboSpeed = 2.0f;
 	private float maxSpeed = 100f;
-	private float minSpeed = -100f ;
+	private float minSpeed = -100f;
 	private float sideSpeed = 10f;
 
 	private Rigidbody2D penguinBody;
@@ -215,8 +221,49 @@ public class MovePenguin : MonoBehaviour {
 			anim.speed = anim.GetFloat ("JumpSpeed");
 		}
 	}
+	private void ChangeAlpha(Material mat, float alphaValue)
+	{
+		Color oldColor = mat.color;
+		Color newColor = new Color(oldColor.r, oldColor.g, oldColor.b, alphaValue);         
+		mat.SetColor("_Color", newColor);               
+	}
+	private int fadeState(){
+		ChangeAlpha (penguinRenderer.material, alphaState);
+		if (alphaState >= 1) {
+			order = -1f;
+			alphaState =1 + order * 0.7f * Time.fixedDeltaTime;
+			return 1;
+		}
+		if (alphaState >= 0.5f) {
+			alphaState =alphaState + order * 0.7f * Time.fixedDeltaTime;
+		}
+		if (alphaState < 0.5f) {
+			order = 1f;
+			alphaState =0.5f;
+			return 1;
+		}
+		return 0;
+	}
+	public void fadePenguin(int repeat){
+		if (fadeCount < repeat) {
+			fadeCount += fadeState ();
+		} else {
+			ChangeAlpha (penguinRenderer.material, 1);
+			fadeCount = 0;
+			gotHit = false;
+		}
+	}
+
+	public void icicleHit(){
+		if (gotHit) {
+			fadePenguin (7);
+		}
+	}
 
 	private void gameOver(){
+		if (Health == 0) {
+			isAlive = false;
+		}
 		if (isAlive == false) {
 			penguinBody.constraints = RigidbodyConstraints2D.FreezeAll;
 			controlRef.fallingVel = 0;
@@ -229,6 +276,7 @@ public class MovePenguin : MonoBehaviour {
 	}
 	// Use this for initialization
 	void Start () {
+		penguinRenderer = this.gameObject.GetComponent<SpriteRenderer> ();
 		CC = GameObject.Find ("CanvasObject").GetComponent<canvasController>();
 		DBref = GameObject.Find ("HighScore").GetComponent<DBscript> ();
 		anim = GetComponent<Animator> ();
@@ -243,6 +291,7 @@ public class MovePenguin : MonoBehaviour {
 		movement ();
 		reduceCooldown();
 		animatorState ();
+		icicleHit ();
 	}
 	// Update is called once per frame, frame pushed when ready
 	void Update(){

@@ -7,16 +7,21 @@ public class icicleProperty : MonoBehaviour {
 	private theController tc;
 	private MovePenguin mp;
 	private float fallVel;
+	private GameObject icicle;
+
 	// Use this for initialization
 	void OnCollisionEnter2D (Collision2D other) {
 		if (other.gameObject.CompareTag ("Player")) {
-			mp.isAlive = false;
+			mp.Health--;
+			mp.gotHit = true;
+			Destroy (icicle);
 		}
 	}
 
 	void Start () {
 		tc = GameObject.Find ("GameController").GetComponent<theController> ();
 		mp = GameObject.Find ("Penguin").GetComponent<MovePenguin> ();	
+		icicle = GameObject.FindGameObjectWithTag ("Icicle");
 	}
 
 
