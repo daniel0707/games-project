@@ -10,10 +10,12 @@ public class icicleProperty : MonoBehaviour {
 	private GameObject icicle;
 	private AudioSource gotHit;
 
+
 	// Use this for initialization
 	void OnCollisionEnter2D (Collision2D other) {
 		if (other.gameObject.CompareTag ("Player")) {
 			mp.Health--;
+
 			gotHit.Play ();
 			mp.gotHit = true;
 			Destroy (icicle);

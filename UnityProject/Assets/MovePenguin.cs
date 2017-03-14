@@ -11,8 +11,8 @@ public class MovePenguin : MonoBehaviour {
 	public bool isAlive = true;
 	private Animator anim;
 	private theController controlRef;
-	[HideInInspector]public bool firstJump = false;
 
+	[HideInInspector]public bool firstJump = false;
 	[HideInInspector]public bool gotHit;
 	[HideInInspector]public int fadeCount = 0;
 	[HideInInspector]public float alphaState = 1f;
