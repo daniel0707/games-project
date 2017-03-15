@@ -2,7 +2,7 @@ Ice!Ice!Penguin!
 
 Game where you try your best to avoid icicles or falling and hope to get to the top of the tower to rescue your beloved one.
 
-Patch notes: 
+Patch notes:
 
 ***First release v1.0***
 
@@ -26,7 +26,7 @@ Patch notes:
 
 ***1.30***
 
--Added Icicles that kill penguin 
+-Added Icicles that kill penguin
 
 ***1.21***
 
@@ -74,7 +74,7 @@ Perks:
 
 ////////////////////////////
 
-Compiled game available [here](https://github.com/daniel0707/games-project/blob/master/Compiled/Ice!Ice!Penguin_1.0_compiled.zip)
+Compiled game available [here](https://github.com/daniel0707/games-project/blob/master/Compiled/Ice!Ice!Penguin_1.01.zip)
 
 [Online version](users.metropolia.fi/~daniev/)
 
@@ -89,6 +89,6 @@ Copyright (C) 2017  Daniel Vahla
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
-    
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
 [See the GNU General Public License for more details.](http://www.gnu.org/licenses/)
