@@ -137,7 +137,7 @@ public class MovePenguin : MonoBehaviour {
 		//world starts moving after first jump
 		if ((Input.GetKey (KeyCode.UpArrow)) && (IsGrounded()) && (isFalling())) {
 			GetComponent<AudioSource>().Play();
-			if (penguinBody.velocity.x <= 100f) {
+			if (Mathf.Abs(penguinBody.velocity.x) <= 100f) {
 				penguinBody.velocity = new Vector2 (penguinBody.velocity.x, jumpSpeed);
 			} else {
 				penguinBody.velocity = new Vector2 (penguinBody.velocity.x, jumpSpeed * comboSpeed);
