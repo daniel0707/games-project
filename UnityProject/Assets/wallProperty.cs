@@ -2,21 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class wallProperty : MonoBehaviour {
+public class WallProperty : MonoBehaviour {
 	
-	private theController tc;
-
+	private TheController tc;
 	private float fallVel;
 
-
-
-	// Use this for initialization
+	// Used for initialization
 	void Start () {
-		tc = GameObject.Find ("GameController").GetComponent<theController> ();
+		tc = GameObject.Find ("GameController").GetComponent<TheController> ();
 	}
 	
 	// Update is called once per frame
-
 	void FixedUpdate () {
 		fallVel = tc.fallingVel;
 		transform.Translate (0,fallVel, 0);

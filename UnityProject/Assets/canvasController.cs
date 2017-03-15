@@ -2,17 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class canvasController : MonoBehaviour {
+//control canvas state, set visible to show scores
+public class CanvasController : MonoBehaviour {
 	public GameObject canvasObject;
 
 	public void MakeActive(){
 		canvasObject.SetActive (true);
 	}
+
 	void Start () {
 	}
-	
-	// Update is called once per frame
 	void Update () {
-		
 	}
 }

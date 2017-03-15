@@ -4,17 +4,15 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+//reloads game scene, should be attached to a button
 public class Reset : MonoBehaviour {
 
 	public void RestartGame(){
 		SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
 	}
 
-	// Use this for initialization
 	void Start () {
 	}
-	
-	// Update is called once per frame
 	void Update () {
 	}
 }

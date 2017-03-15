@@ -2,33 +2,39 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Class responsible for controlling the Penguin
 public class MovePenguin : MonoBehaviour {
 
+	//references 
 	private SpriteRenderer penguinRenderer;
-	private canvasController CC;
+	private CanvasController CC;
 	private DBscript DBref;
+	private Animator anim;
+	private TheController controlRef;
+	private Rigidbody2D penguinBody;
+
+	//variables for operating the penguin
 	private bool bouncedWall;
 	public bool isAlive = true;
-	private Animator anim;
-	private theController controlRef;
-
 	[HideInInspector]public bool firstJump = false;
 	[HideInInspector]public bool gotHit;
 	[HideInInspector]public int fadeCount = 0;
 	[HideInInspector]public float alphaState = 1f;
 	[HideInInspector]public float order = 0;
-	[HideInInspector]public int Health = 6;
-	[HideInInspector]public int Cooldown = 0;
-	[HideInInspector]public float LastSpeed;
-	[HideInInspector]public float CurrentSpeed;
-	[HideInInspector]public bool FacingRight = true;
-	[HideInInspector]public GUIText ScoreText;
+	[HideInInspector]public int health = 6;
+	[HideInInspector]public int cooldown = 0;
+	[HideInInspector]public float lastSpeed;
+	[HideInInspector]public float currentSpeed;
+	[HideInInspector]public bool facingRight = true;
+	[HideInInspector]public GUIText scoreText;
 
+	//variables for score calculations
 	private float currentLevel = 0f;
 	private float highestLevel = 0f;
 	private float previousLevel = 0f;
-	public float Score = 0f;
+	public float score = 0f;
 
+	//variables for movement control
 	private float jumpSpeed = 200f;
 	private float comboSpeed = 1.0f;
 	private int comboScore = 0;
@@ -36,32 +42,36 @@ public class MovePenguin : MonoBehaviour {
 	private float maxSpeed = 100f;
 	private float minSpeed = -100f;
 	private float sideSpeed = 10f;
+	[HideInInspector]public List<GameObject> objectlist= new List<GameObject>();
 
-	private Rigidbody2D penguinBody;
-
-	[HideInInspector]public List<GameObject> Objectlist= new List<GameObject>();
-
+	//ground check variables
 	private bool grounded = false;
-	public LayerMask WhatIsGround;
-	public Transform PointA;
-	public Transform PointB;
+	public LayerMask whatIsGround;
+	public Transform pointA;
+	public Transform pointB;
 
-	public void getLastVelocity(){
-		LastSpeed = CurrentSpeed;
-		CurrentSpeed = penguinBody.velocity.x;
+	public void GetLastVelocity(){
+		lastSpeed = currentSpeed;
+		currentSpeed = penguinBody.velocity.x;
 	}
-	public bool isGrounded(){
-		grounded = Physics2D.OverlapArea (PointA.position,PointB.position, WhatIsGround);
+
+	//return true if the rectangular area between two points overlaps with layers in the mask
+	//checks if the penguin is on a platform
+	public bool IsGrounded(){
+		grounded = Physics2D.OverlapArea (pointA.position,pointB.position, whatIsGround);
 		return grounded;
 	}
-
+		
 	void OnCollisionEnter2D(Collision2D other){
+		
+		//if penguin collides with floor we make the penguin follow floors movement
 		if (other.gameObject.tag == "Floor") {
 			transform.parent = other.transform;
 
-			//Add to score if player reached a higher level
-			if (isGrounded ()) {
-				blockProperty bP = other.gameObject.GetComponent<blockProperty> () as blockProperty;
+			//add to score if player reached a higher platform
+			//reward for multiple platform jump with score and movement combos
+			if (IsGrounded ()) {
+				BlockProperty bP = other.gameObject.GetComponent<BlockProperty> () as BlockProperty;
 				currentLevel = bP.level;
 				if (currentLevel == 500) {
 					isAlive = false;
@@ -80,14 +90,16 @@ public class MovePenguin : MonoBehaviour {
 					comboSpeed = 1.0f;
 				}
 				if (currentLevel == highestLevel) {
-					Score += (10 + comboScore) * (currentLevel - previousLevel);
+					score += (10 + comboScore) * (currentLevel - previousLevel);
 				}
 				if (currentLevel > previousLevel) {
 					previousLevel = currentLevel;
 				}
-				ScoreText.text = "Score: " + Score;
+				scoreText.text = "Score: " + score;
 			}
 		}
+
+		//on collision with wall do a flip and play sound
 		if (other.gameObject.tag == "WallLeft" || other.gameObject.tag == "WallRight") {
 			bouncedWall = true;
 			other.gameObject.GetComponent<AudioSource>().Play();
@@ -95,12 +107,16 @@ public class MovePenguin : MonoBehaviour {
 		}
 	}
 
+	//when leaving a platform remove penguin from being a child of the platform
+	//extra measures implemented in BottomDetection class to counter this event not triggering
 	void OncollisionExit2D(Collision2D other){
 		if (other.gameObject.tag == "Floor") {
 			transform.parent = null;
 		}
 	}
 		
+	//return true if penguins velocity is close to 0
+	//prevents jumping when inside platform
 	private bool isFalling(){
 		if (penguinBody.velocity.y <= 0.1f) {
 			return true;
@@ -109,12 +125,17 @@ public class MovePenguin : MonoBehaviour {
 		}
 	}
 
+	//main movement method
 	private void movement(){
+
+		//update variables
 		maxSpeed = 100f * comboSpeed;
 		minSpeed = -100f * comboSpeed;
 		sideSpeed = 10f * comboSpeed;
 
-		if ((Input.GetKey (KeyCode.UpArrow)) && (isGrounded()) && (isFalling())) {
+		//jump only when grounded, falling and players press key UP
+		//world starts moving after first jump
+		if ((Input.GetKey (KeyCode.UpArrow)) && (IsGrounded()) && (isFalling())) {
 			GetComponent<AudioSource>().Play();
 			if (penguinBody.velocity.x <= 100f) {
 				penguinBody.velocity = new Vector2 (penguinBody.velocity.x, jumpSpeed);
@@ -127,7 +148,8 @@ public class MovePenguin : MonoBehaviour {
 			}
 		}
 			
-		if (Input.GetKey (KeyCode.LeftArrow)&&Cooldown == 0) {
+		//move left or right when cooldown from bouncing the wall is over
+		if (Input.GetKey (KeyCode.LeftArrow)&&cooldown == 0) {
 			if (penguinBody.velocity.x > minSpeed) {
 				penguinBody.velocity = new Vector2 (penguinBody.velocity.x - sideSpeed, penguinBody.velocity.y);
 			} else {
@@ -135,8 +157,7 @@ public class MovePenguin : MonoBehaviour {
 			}
 		}
 				
-
-		if (Input.GetKey (KeyCode.RightArrow) && Cooldown == 0) {
+		if (Input.GetKey (KeyCode.RightArrow) && cooldown == 0) {
 
 			if (penguinBody.velocity.x < maxSpeed) {
 				penguinBody.velocity = new Vector2 (penguinBody.velocity.x + sideSpeed, penguinBody.velocity.y);
@@ -144,58 +165,63 @@ public class MovePenguin : MonoBehaviour {
 				penguinBody.velocity = new Vector2 (maxSpeed, penguinBody.velocity.y);
 			}
 		}
-					
-	}
-	public void turnCorrect (){
+	}//close movement method
+
+	//update penguin localscale depending on velocity
+	public void TurnCorrect (){
 		if (penguinBody.velocity.x > 0) {
-			FacingRight = true;
+			facingRight = true;
 			penguinBody.transform.localScale = new Vector3 (1, 1, 1);
 		}
 		if (penguinBody.velocity.x < 0) {
 			penguinBody.transform.localScale = new Vector3 (-1, 1, 1);
-			FacingRight = false;
+			facingRight = false;
 		}
 	}
+
+	//change penguin localscale, direction of velocity and speed combo
+	//cooldown prevents player from slowing down due to not reacting to change of direction fast enough
 	public void Flip(){
-		
 		penguinBody.transform.localScale = new Vector3 ((-1 * penguinBody.transform.localScale.x), penguinBody.transform.localScale.y, penguinBody.transform.localScale.z);
-		penguinBody.velocity = new Vector2 ((-1 * LastSpeed), penguinBody.velocity.y);
-		if (FacingRight) {
-			FacingRight = false;
+		penguinBody.velocity = new Vector2 ((-1 * lastSpeed), penguinBody.velocity.y);
+		if (facingRight) {
+			facingRight = false;
 		} else {
-			FacingRight = true;
+			facingRight = true;
 		}
 		comboSpeed += 0.1f;
 		if (comboSpeed >= maxComboSpeed) {
 			comboSpeed = maxComboSpeed;
 		}
-		Cooldown = 3;
+		cooldown = 3;
 	}
 
+	//global check on penguins position
+	//when penguin is too high he will be stopped and the world will scroll faster
+	//upon falling off screen penguin is dead
 	private void fixPos (){
 		if (penguinBody.transform.position.y + penguinBody.velocity.y * Time.deltaTime >= 60) {
-			
 			GameObject[] floorList = GameObject.FindGameObjectsWithTag("Floor");
 			GameObject[] wallLeftList = GameObject.FindGameObjectsWithTag ("WallLeft");
 			GameObject[] wallRightList = GameObject.FindGameObjectsWithTag ("WallRight");
 			GameObject[] icicleList = GameObject.FindGameObjectsWithTag ("Icicle");
 			foreach (GameObject obj in floorList) {
-				Objectlist.Add (obj);
+				objectlist.Add (obj);
 			}
 			foreach (GameObject obj in wallLeftList) {
-				Objectlist.Add (obj);
+				objectlist.Add (obj);
 			}
 			foreach (GameObject obj in wallRightList) {
-				Objectlist.Add (obj);
+				objectlist.Add (obj);
 			}
 			foreach (GameObject obj in icicleList) {
-				Objectlist.Add (obj);
+				objectlist.Add (obj);
 			}
 			float deltaPos = -penguinBody.velocity.y * Time.deltaTime;
-			foreach (GameObject obj in Objectlist) {
+			foreach (GameObject obj in objectlist) {
 				obj.transform.Translate (0,deltaPos, 0);
 			}
-			Objectlist.Clear ();
+			objectlist.Clear ();
 			penguinBody.transform.position = new Vector2 (penguinBody.transform.position.x, 60);
 		}
 		if (penguinBody.transform.position.y < -96) {
@@ -203,15 +229,16 @@ public class MovePenguin : MonoBehaviour {
 		}
 	}
 
-
+	//reduce flip cooldown each frame 
 	private void reduceCooldown(){
-		if(Cooldown>0){
-			Cooldown--;
+		if(cooldown>0){
+			cooldown--;
 		}
 	}
 
+	//controll of the animation speed
 	private void animatorState(){
-		anim.SetBool ("isGrounded", isGrounded ());
+		anim.SetBool ("IsGrounded", IsGrounded ());
 		anim.SetFloat ("WalkSpeed", Mathf.Abs(penguinBody.velocity.x/10));
 		anim.SetFloat ("JumpSpeed", Mathf.Abs (penguinBody.velocity.y / 10));
 		if (anim.GetCurrentAnimatorStateInfo(0).IsName("Walking")) {
@@ -221,12 +248,15 @@ public class MovePenguin : MonoBehaviour {
 			anim.speed = anim.GetFloat ("JumpSpeed");
 		}
 	}
-	private void ChangeAlpha(Material mat, float alphaValue)
-	{
+
+	//Group of methods controlling penguin renderer alpha state
+	//alpha state cycles upon receiving damage to the penguin
+	private void ChangeAlpha(Material mat, float alphaValue){
 		Color oldColor = mat.color;
 		Color newColor = new Color(oldColor.r, oldColor.g, oldColor.b, alphaValue);         
 		mat.SetColor("_Color", newColor);               
 	}
+
 	private int fadeState(){
 		ChangeAlpha (penguinRenderer.material, alphaState);
 		if (alphaState >= 1) {
@@ -244,7 +274,8 @@ public class MovePenguin : MonoBehaviour {
 		}
 		return 0;
 	}
-	public void fadePenguin(int repeat){
+
+	public void FadePenguin(int repeat){
 		if (fadeCount < repeat) {
 			fadeCount += fadeState ();
 		} else {
@@ -253,15 +284,15 @@ public class MovePenguin : MonoBehaviour {
 			gotHit = false;
 		}
 	}
-
-	public void icicleHit(){
+		
+	public void IcicleHit(){
 		if (gotHit) {
-			fadePenguin (7);
+			FadePenguin (7);
 		}
 	}
-
+		
 	private void gameOver(){
-		if (Health == 0) {
+		if (health == 0) {
 			isAlive = false;
 		}
 		if (isAlive == false) {
@@ -269,21 +300,22 @@ public class MovePenguin : MonoBehaviour {
 			controlRef.fallingVel = 0;
 			CC.MakeActive ();
 			DBref.ShowScores ();
-			if (DBref.newHighScore()&& !DBref.scoreEntered) {
+			if (DBref.NewHighScore()&& !DBref.scoreEntered) {
 				DBref.nameDialog.SetActive(true);
 			}
 		}
 	}
-	// Use this for initialization
+
+	// Used for initialization
 	void Start () {
 		penguinRenderer = this.gameObject.GetComponent<SpriteRenderer> ();
-		CC = GameObject.Find ("CanvasObject").GetComponent<canvasController>();
+		CC = GameObject.Find ("CanvasObject").GetComponent<CanvasController>();
 		DBref = GameObject.Find ("HighScore").GetComponent<DBscript> ();
 		anim = GetComponent<Animator> ();
-		controlRef = GameObject.Find ("GameController").GetComponent<theController> ();
+		controlRef = GameObject.Find ("GameController").GetComponent<TheController> ();
 		penguinBody = this.gameObject.GetComponent<Rigidbody2D>();
-		ScoreText = GameObject.Find ("ScoreView").GetComponent<GUIText> ();
-		ScoreText.text = "Score: " + Score;
+		scoreText = GameObject.Find ("ScoreView").GetComponent<GUIText> ();
+		scoreText.text = "Score: " + score;
 	}
 	
 	// Update is called once per frame, fixed framerate
@@ -291,13 +323,14 @@ public class MovePenguin : MonoBehaviour {
 		movement ();
 		reduceCooldown();
 		animatorState ();
-		icicleHit ();
+		IcicleHit ();
 	}
+
 	// Update is called once per frame, frame pushed when ready
 	void Update(){
-		turnCorrect ();
+		TurnCorrect ();
 		fixPos ();
 		gameOver ();
-		getLastVelocity ();
+		GetLastVelocity ();
 	}
 }

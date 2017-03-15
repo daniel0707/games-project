@@ -2,20 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class icicleProperty : MonoBehaviour {
+public class IcicleProperty : MonoBehaviour {
 
-	private theController tc;
+	private TheController tc;
 	private MovePenguin mp;
 	private float fallVel;
 	private GameObject icicle;
 	private AudioSource gotHit;
 
-
-	// Use this for initialization
+	//on collision destroy icicle and decrease penguin health
 	void OnCollisionEnter2D (Collision2D other) {
 		if (other.gameObject.CompareTag ("Player")) {
-			mp.Health--;
-
+			mp.health--;
 			gotHit.Play ();
 			mp.gotHit = true;
 			Destroy (icicle);
@@ -24,14 +22,11 @@ public class icicleProperty : MonoBehaviour {
 
 	void Start () {
 		gotHit = GameObject.Find ("gotHit").GetComponent<AudioSource> ();
-		tc = GameObject.Find ("GameController").GetComponent<theController> ();
+		tc = GameObject.Find ("GameController").GetComponent<TheController> ();
 		mp = GameObject.Find ("Penguin").GetComponent<MovePenguin> ();	
 		icicle = GameObject.FindGameObjectWithTag ("Icicle");
 	}
-
-
-	// Update is called once per frame
-
+		
 	void FixedUpdate () {
 		fallVel = tc.fallingVel * 3;
 		transform.Translate (0,fallVel, 0);

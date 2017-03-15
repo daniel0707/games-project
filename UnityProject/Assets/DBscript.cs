@@ -6,41 +6,36 @@ using System.Data;
 using System;
 using UnityEngine.UI;
 
+//Database controller
 public class DBscript : MonoBehaviour {
 
 	public bool scoreEntered = false;
-	
 	private string conn;
-
 	public List<Highscore>highScores = new List<Highscore>();
 
-	public GameObject scorePrefab;
-
-	public Transform scoreParent;
-
+	//how many ranks will the highscore display and how many are saved in the database
 	public int topRanks;
-
 	public int saveScores;
 
 	public InputField playerName;
-
 	private MovePenguin mp;
-
 	public GameObject nameDialog;
+	public GameObject scorePrefab;
+	public Transform scoreParent;
 
-
-	private void GetScores(){
+	//fetch scores from database
+	private void getScores(){
+		//empty score holding list
 		highScores.Clear ();
 
 		IDbConnection dbconn;
 		dbconn = (IDbConnection) new SqliteConnection(conn);
-		dbconn.Open(); //Open connection to the database.
+		dbconn.Open();
 		IDbCommand dbcmd = dbconn.CreateCommand();
 		string sqlQuery = "SELECT ID,Name,Score FROM HighScore";
 		dbcmd.CommandText = sqlQuery;
 		IDataReader reader = dbcmd.ExecuteReader();
-		while (reader.Read())
-		{
+		while (reader.Read()){
 			highScores.Add(new Highscore(reader.GetInt32(0),reader.GetString(1),reader.GetInt32(2)));
 		}
 		reader.Close();
@@ -50,17 +45,15 @@ public class DBscript : MonoBehaviour {
 		dbconn.Close();
 		dbconn = null;
 
+		//sort results according to Highscore class sorting rules
 		highScores.Sort ();
 	}
-
-	public void ShowScores(){
 		
-		GetScores ();
-
+	public void ShowScores(){
+		getScores ();
 		foreach (GameObject score in GameObject.FindGameObjectsWithTag("Score")) {
 			Destroy (score);
 		}
-
 		for (int i = 0; i < topRanks; i++) {
 			if (i < highScores.Count) {
 				GameObject tmpObj = Instantiate (scorePrefab);
@@ -68,26 +61,25 @@ public class DBscript : MonoBehaviour {
 				tmpObj.GetComponent<HighscoreScript> ().SetScore (tmpScore.Name, tmpScore.EndScore.ToString (), "#" + (i + 1) );
 				tmpObj.transform.SetParent (scoreParent);
 				tmpObj.GetComponent<RectTransform> ().localScale = new Vector3 (1, 1, 1);
-
-
 			}
 		}
 	}
 
-	private void InsertScore(string name, int newScore){
+
+	private void insertScore(string name, int newScore){
 		int hsCount = highScores.Count;
-		GetScores ();
+		getScores ();
 		if (highScores.Count > 0) {
 			Highscore lowestScore = highScores [highScores.Count - 1];
 			if (lowestScore != null && saveScores > 0 && highScores.Count >= saveScores && newScore > lowestScore.EndScore) {
-				DeleteScore (lowestScore.ID);
+				deleteScore (lowestScore.ID);
 				hsCount--;
 			}
 		}
 		if (hsCount < saveScores) {
 			IDbConnection dbconn;
 			dbconn = (IDbConnection) new SqliteConnection(conn);
-			dbconn.Open(); //Open connection to the database.
+			dbconn.Open();
 			IDbCommand dbcmd = dbconn.CreateCommand();
 			string sqlQuery = string.Format("INSERT INTO HighScore(Name,Score)VALUES(\'{0}\',\'{1}\')",name,newScore);
 			dbcmd.CommandText = sqlQuery;
@@ -98,11 +90,11 @@ public class DBscript : MonoBehaviour {
 			dbconn = null;
 		}
 	}
-
-	private void DeleteScore(int rank){
+		
+	private void deleteScore(int rank){
 		IDbConnection dbconn;
 		dbconn = (IDbConnection) new SqliteConnection(conn);
-		dbconn.Open(); //Open connection to the database.
+		dbconn.Open(); 
 		IDbCommand dbcmd = dbconn.CreateCommand();
 		string sqlQuery = string.Format("DELETE FROM HighScore WHERE ID = \'{0}\'",rank);
 		dbcmd.CommandText = sqlQuery;
@@ -113,9 +105,9 @@ public class DBscript : MonoBehaviour {
 		dbconn = null;
 	}
 
-	private void DeleteExtraScore(){
-
-		GetScores ();
+	//if we decide to hold more scores than we show at end screen we need to use this method upon start
+	private void deleteExtraScore(){
+		getScores ();
 
 		if (saveScores < highScores.Count) {
 			int deleteCount = highScores.Count - saveScores;
@@ -140,24 +132,23 @@ public class DBscript : MonoBehaviour {
 
 	public void EnterName(){
 		if (playerName.text != string.Empty) {
-			
-			int score = (int)mp.Score;
-			InsertScore (playerName.text, score);
+			int score = (int)mp.score;
+			insertScore (playerName.text, score);
 			playerName.text = string.Empty;
 
 			ShowScores ();
 			scoreEntered = true;
 			nameDialog.SetActive (false);
-
 		}
 	}
 
-	public bool newHighScore(){
+	//check if player score should belong to the highscore list
+	public bool NewHighScore(){
 		if (highScores.Count < saveScores) {
 			return true;
 		} else {
 			for (int i = 0; i < highScores.Count; i++) {
-				if (mp.Score > highScores [i].EndScore) {
+				if (mp.score > highScores [i].EndScore) {
 					return true;
 				}
 			}
@@ -165,50 +156,15 @@ public class DBscript : MonoBehaviour {
 		return false;
 	}
 		
-	private void createDefaultDB(){
-	}
-	// Use this for initialization
+	// Used for initialization
 	void Start () {
-		
 		conn = "URI=file:" + System.IO.Path.Combine(Application.streamingAssetsPath, "Database.db"); //Path to database.
 		mp = GameObject.Find("Penguin").GetComponent<MovePenguin>();
-		//DeleteExtraScore ();
-
+		//When we want to save more scores than we sho use deleteExtraScore ();
 		ShowScores ();
-		//sql stuff
-		/*
-		string conn = "URI=file:" + Application.dataPath + "/DB/Database.db"; //Path to database.
-		IDbConnection dbconn;
-		dbconn = (IDbConnection) new SqliteConnection(conn);
-		dbconn.Open(); //Open connection to the database.
-		IDbCommand dbcmd = dbconn.CreateCommand();
-		string sqlQuery = "SELECT ID,Name,Score FROM HighScore";
-		dbcmd.CommandText = sqlQuery;
-		IDataReader reader = dbcmd.ExecuteReader();
-		while (reader.Read())
-		{
-			int ID = reader.GetInt32(0);
-			string Name = reader.GetString(1);
-			int Score = reader.GetInt32(2);
-
-		}
-		reader.Close();
-		reader = null;
-		*/
-
-
-		//closing stuff
-		/*
-		dbcmd.Dispose();
-		dbcmd = null;
-		dbconn.Close();
-		dbconn = null;
-		*/
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		//something for showing the end game screen
-		//on new score do: nameDialog.SetActive(true);
 	}
 }
