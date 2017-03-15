@@ -56,6 +56,8 @@ Arrow Up 	     - jump
 
 Arrow Left/Right - move left/right
 
+///////////////////////////
+
 Perks:
 
 ¤ Bounce of walls to increase maximum speed.
@@ -70,8 +72,23 @@ Perks:
 
 ¤ Icicles spawn 1 second after warning sign disappears.
 
+////////////////////////////
 
+Compiled game available [here](https://github.com/daniel0707/games-project/blob/master/Compiled/Ice!Ice!Penguin_1.0_compiled.zip)
 
-Compiled game available at 
+[Online version](users.metropolia.fi/~daniev/)
 
-Online version available to play at
+///////////////////////////
+
+Copyright (C) 2017  Daniel Vahla
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+    
+[See the GNU General Public License for more details.](http://www.gnu.org/licenses/)
