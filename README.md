@@ -74,7 +74,7 @@ Perks:
 
 ////////////////////////////
 
-Compiled game available [here](https://github.com/daniel0707/games-project/blob/master/Compiled/Ice!Ice!Penguin_1.01.zip)
+Compiled game available [here](https://github.com/daniel0707/games-project/blob/master/Compiled/Ice!Ice!Penguin!_1.01.zip)
 
 [Online version](users.metropolia.fi/~daniev/)
 
