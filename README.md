@@ -2,6 +2,30 @@ Ice!Ice!Penguin!
 
 Game where you try your best to avoid icicles or falling and hope to get to the top of the tower to rescue your beloved one.
 
+Controls:
+
+Arrow Up 	     - jump
+
+Arrow Left/Right - move left/right
+
+///////////////////////////
+
+Perks:
+
+¤ Bounce of walls to increase maximum speed.
+
+¤ Jump speed is related to your vertical speed.
+
+¤ Jumping more than one floor up gives bonus score.
+
+¤ Failing to jump more floors and bounce of walls will decrease/reset score and speed combos.
+
+¤ Icicles hurt the penguin, avoid them.
+
+¤ Icicles spawn 1 second after warning sign disappears.
+
+////////////////////////////////////////////////////////////////////////////////////////
+
 Patch notes:
 
 ***First release v1.0***
@@ -10,7 +34,7 @@ Patch notes:
 
 -cleaned up code and git depository
 
-///////   Beta    /////////
+///////   Beta    //////////////////////////////////////////////////////////////////////
 
 ***1.41***
 
@@ -48,31 +72,8 @@ Patch notes:
 
 -minor bug fixes
 
-///////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 
-Controls:
-
-Arrow Up 	     - jump
-
-Arrow Left/Right - move left/right
-
-///////////////////////////
-
-Perks:
-
-¤ Bounce of walls to increase maximum speed.
-
-¤ Jump speed is related to your vertical speed.
-
-¤ Jumping more than one floor up gives bonus score.
-
-¤ Failing to jump more floors and bounce of walls will decrease/reset score and speed combos.
-
-¤ Icicles hurt the penguin, avoid them.
-
-¤ Icicles spawn 1 second after warning sign disappears.
-
-////////////////////////////
 
 Compiled game available [here](https://github.com/daniel0707/games-project/blob/master/Compiled/Ice!Ice!Penguin!_1.01.zip)
 
@@ -92,3 +93,9 @@ Copyright (C) 2017  Daniel Vahla
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 [See the GNU General Public License for more details.](http://www.gnu.org/licenses/)
+
+inScope Studios video tutorials for SQLite database implementation
+
+Graphic assets from kenney.nl, license CC0 1.0 Universal
+
+Background music from incompetech.com, license CC0 1.0 Universal
