@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="BlockProperty" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAgAAiAIAAAgAAQAAAAAAAEQAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\BlockProperty.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BottomDetection" Collapsed="true">
+    <Position X="2.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAiAAAAAAAAAAAAAAAAAgAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Assets\BottomDetection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CanvasController" Collapsed="true">
+    <Position X="4" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQEAAAAACAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\CanvasController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DBscript" Collapsed="true">
+    <Position X="5.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQQABAIBADAAEQAAEAEAAgAAAIQAAACAAEgCAAAAACA=</HashCode>
+      <FileName>Assets\DBscript.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HealthController" Collapsed="true">
+    <Position X="0.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAiAAAACAAAAAAAACAAICAAAAAAACgAAAAAA=</HashCode>
+      <FileName>Assets\HealthController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Highscore" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="2.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAQAAAAAAAQAAAAAAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>Assets\Highscore.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="HighscoreScript" Collapsed="true">
+    <Position X="4" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAgAAAAAAAQAAAAAAAAAAAgAAAAAAAA=</HashCode>
+      <FileName>Assets\HighscoreScript.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IcicleController" Collapsed="true">
+    <Position X="5.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEQCAAAAACAAAAABEAAAIAAAAAQAIAAAAAACAAAAAAA=</HashCode>
+      <FileName>Assets\IcicleController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IcicleProperty" Collapsed="true">
+    <Position X="0.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAiAAAAAgAAAAgAAAAACAAAAAAAAiAAAAAAA=</HashCode>
+      <FileName>Assets\IcicleProperty.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MovePenguin" Collapsed="true">
+    <Position X="2.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EETAAAyBEmCkAwQQAAEIDAEAACCAFBBBBQFhCAEUBMk=</HashCode>
+      <FileName>Assets\MovePenguin.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Reset" Collapsed="true">
+    <Position X="4" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>Assets\Reset.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TheController" Collapsed="true">
+    <Position X="5.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAABAAiAICAAABAAAIAAQIAAAgAAAAAAAAAAABAA=</HashCode>
+      <FileName>Assets\TheController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WallProperty" Collapsed="true">
+    <Position X="0.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAiAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\WallProperty.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
